@@ -15,6 +15,35 @@ const splitsElement = document.getElementById('splits');
 
 function printTime() {
   // ... your code goes here
+  let minutes = chronometer.getMinutes();
+  let seconds = chronometer.getSeconds();
+
+  let minutesString = minutes.toString();
+  let secondsString = seconds.toString();
+
+  if (minutesString.length < 2) {
+    minutesString = '0' + minutesString;
+  }
+  if (secondsString.length < 2) {
+    secondsString = '0' + secondsString;
+  }
+
+  minDecElement.innerHTML = minutesString[0];
+  minUniElement.innerHTML = minutesString[1];
+
+  secDecElement.innerHTML = secondsString[0];
+  secUniElement.innerHTML = secondsString[1];
+
+  let message = '';
+  message =
+    message +
+    minDecElement.innerHTML +
+    minUniElement.innerHTML +
+    ':' +
+    secDecElement.innerHTML +
+    secUniElement.innerHTML;
+
+  return message;
 }
 
 function printMinutes() {
@@ -56,10 +85,47 @@ function setResetBtn() {
 
 // Start/Stop Button
 btnLeftElement.addEventListener('click', () => {
-  // ... your code goes here
+  let leftButtonValue = btnLeftElement.innerHTML;
+  // si esta en start //
+  if (leftButtonValue === 'START') {
+    btnLeftElement.innerHTML = 'STOP';
+    //cambiar la clase a btn stop
+    btnLeftElement.className = 'btn stop';
+    setInterval(printTime, 1000);
+    chronometer.start();
+    //Set the btnRight button with the text SPLIT, and the class btn split.
+    btnRightElement.innerHTML = 'SPLIT';
+    btnRightElement.className = 'btn split';
+  }
+  if (leftButtonValue === 'STOP') {
+    btnLeftElement.innerHTML = 'START';
+    //cambiar la clase a btn start
+    btnLeftElement.className = 'btn start';
+    chronometer.stop();
+    btnRightElement.innerHTML = 'RESET';
+    btnRightElement.className = 'btn reset';
+  }
 });
 
 // Reset/Split Button
 btnRightElement.addEventListener('click', () => {
-  // ... your code goes here
+  let splitList;
+  let rightButtonValue = btnRightElement.innerHTML;
+  if (rightButtonValue === 'SPLIT') {
+    //crear y añadir elemento split en la lista
+    let currentTime = printTime();
+    let listElement = document.createElement('li');
+    listElement.innerHTML = currentTime;
+    splitList = document.getElementById('splits');
+    console.log(splitList);
+    splitList.appendChild(listElement);
+  }
+  if (rightButtonValue === 'RESET') {
+    chronometer.reset();
+    let splitsToDelete = document.getElementsByTagName('li');
+    let splitList = document.getElementById('splits');
+    for (let i = splitsToDelete.length - 1; i >= 0; i--) {
+      splitList.removeChild(splitsToDelete[i]);
+    }
+  }
 });
